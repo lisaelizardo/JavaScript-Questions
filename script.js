@@ -1,57 +1,3 @@
-var quizContainer = document.getElementById('quiz');
-var resultsContainer = document.getElementById('results');
-var submitButton = document.getElementById('submit');
-
-
-function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
- 
-    function showQuestions(questions, quizContainer){
-        var output = [];
-        var answers;
-
-        for(var i=0; i<questions.length; i++){
-            answers = [];
-
-            for(letter in questions[i].answers){
-                answers.push(
-                    '<label>'
-                    + '<input type="radio" name="question'+i+'" value="'+letter+'">'
-                    + letter + ':'
-                    + questions[i].answers[letter]
-                    +'/label>'
-                );
-            }
-
-            output.push(
-                '<div class="question">' + questions[i].question + '</div>'
-                + '<div class="answers">' + answers.join('') + '</div>'
-            );
-        }
-        quizContainer.innerHTML = output.join('');
-    }
-
-    function showResults(questions, quizContainer, resultsContainer){
-        var answerContainer = quizContainer.querySelectorAll('.answers');
-        var userAnswer = '';
-        var numCorrect = 0;
-
-        for(var i=0; i<questions.length; i++){
-            userAnswer = (answerContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
-            if(userAnswer===questions[i].correctAnswwer){
-                numCorrect++;
-                answerContainers[i].style.color = 'green';
-            }
-            else{
-                answerContainers[i].style.color = 'red';
-            }
-        }
-        resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
-
-
-
-    }
-
-    showQuestions(questions, quizContainer);
     
     var theQuestions = [
         {
@@ -98,10 +44,79 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
             },
             correctAnswer: 'b'
         }
-        }
-    ];
+    ]
 
-    submitButton.onclick = function(){
-        showResults(questions, quizContainer, resultsContainer);
+function renderQuestion(questionObjectIndex) {
+    const questionObject = theQuestions[questionObjectIndex];
+    const questionScreen = document.getElementById('question-screen');
+    const questionHeader = document.getElementById('question-header');
+    const answersArea = document.getElementById('answers-area');
+    
+    answersArea.innerHTML = "" // clear out the old html (the old ul and lis)
+    // update the content of the question screen
+
+    questionHeader.innerText = questionObject.question
+
+    const ul = document.createElement('ul');
+    const questionKeys = Object.keys(questionObject.answers);
+    for (let i = 0; i < questionKeys.length; i++) {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.innerText = questionObject.answers[questionKeys[i]] 
+        button.addEventListener("click", function() {
+            const div = document.createElement('div');
+            if (questionObject.correctAnswer === questionKeys[i]) {
+                // render correct div
+                div.innerText = "Correct!"
+            } else {
+                // render wrong div
+                div.innerText = "Wrong!"
+            }
+            questionScreen.append(div);
+
+            renderQuestion(questionObjectIndex+1)
+
+            setTimeout(() => {
+                div.style.display = "none"
+            }, 1500)
+        });
+        li.append(button);
+        ul.append(li);
+
+    }
+
+    answersArea.append(ul)
+}
+
+var secondsLeft = 60;
+var time = document.querySelector(".timer");
+
+function Time() {
+    var timer = setInterval(function(){
+        secondsLeft--;
+        timer.textContent = secondsLeft + "seconds until GAME OVER.";
+    
+        if (secondsLeft === 0) {
+            clearInterval(timer);
+            sendMessage();
         }
+    })}
+
+    function sendMessage() {
+        time.textContent = "GAME OVER";
+    }
+
+    Time();
+
+function startGame() {
+        // get current screen
+    const startScreen = document.getElementById("start-screen");
+    // set the display to none
+    startScreen.style.display = "none";
+    // get the next screen
+    const questionScreen = document.getElementById('question-screen');
+    // set the display to block to show it
+    questionScreen.style.display = "block";
+
+    renderQuestion(0)
 }
