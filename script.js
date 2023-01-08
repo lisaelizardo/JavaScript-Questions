@@ -1,57 +1,62 @@
-    
-    var theQuestions = [
-        {
-            question: "What is 'Jane Doe' an example of?",
-            answers: {
-                a: 'String',
-                b: 'Number',
-                c: 'Undefined'
-            },
-            correctAnswer: 'a'
+let secondsLeft = 60;
+const timeLabel = document.querySelector("#timer");
+const questionScreen = document.getElementById('question-screen');
+const questionHeader = document.getElementById('question-header');
+const answersArea = document.getElementById('answers-area');
+const startScreen = document.querySelector('#start-screen');
+const startButton = startScreen.querySelector('button');
+
+const theQuestions = [
+    {
+        question: "What is 'Jane Doe' an example of?",
+        answers: {
+            a: 'String',
+            b: 'Number',
+            c: 'Undefined'
         },
-        {
-            question: "What are examples of Primitive types?",
-            answers: {
-                a: 'Number, Boolean, String',
-                b: 'Var, Function, Object',
-                c: 'array, if, else'
-            },
-            correctAnswer: 'a'
-        },  
-        {
-            question: "What is an array?",
-            answers: {
-                a: 'A single element',
-                b: 'Name of an object',
-                c: 'Store groups of data in a single variable'
-            },
-            correctAnswer: 'c'
-        },  
-        {
-            question: "What is JavaScripts' extention?",
-            answers: {
-                a: '.html',
-                b: '.js',
-                c: '.css'
-            },
-            correctAnswer: 'b'
-        },  
-        {
-            question: "Is JavaScript case sensitive?",
-            answers: {
-                a: 'No',
-                b: 'Yes'
-            },
-            correctAnswer: 'b'
-        }
-    ]
+        correctAnswer: 'a'
+    },
+    {
+        question: "What are examples of Primitive types?",
+        answers: {
+            a: 'Number, Boolean, String',
+            b: 'Var, Function, Object',
+            c: 'array, if, else'
+        },
+        correctAnswer: 'a'
+    },
+    {
+        question: "What is an array?",
+        answers: {
+            a: 'A single element',
+            b: 'Name of an object',
+            c: 'Store groups of data in a single variable'
+        },
+        correctAnswer: 'c'
+    },
+    {
+        question: "What is JavaScripts' extention?",
+        answers: {
+            a: '.html',
+            b: '.js',
+            c: '.css'
+        },
+        correctAnswer: 'b'
+    },
+    {
+        question: "Is JavaScript case sensitive?",
+        answers: {
+            a: 'No',
+            b: 'Yes'
+        },
+        correctAnswer: 'b'
+    }
+]
 
 function renderQuestion(questionObjectIndex) {
+    // grab question object from array of questions
     const questionObject = theQuestions[questionObjectIndex];
-    const questionScreen = document.getElementById('question-screen');
-    const questionHeader = document.getElementById('question-header');
-    const answersArea = document.getElementById('answers-area');
-    
+
     answersArea.innerHTML = "" // clear out the old html (the old ul and lis)
     // update the content of the question screen
 
@@ -62,8 +67,8 @@ function renderQuestion(questionObjectIndex) {
     for (let i = 0; i < questionKeys.length; i++) {
         const li = document.createElement('li');
         const button = document.createElement('button');
-        button.innerText = questionObject.answers[questionKeys[i]] 
-        button.addEventListener("click", function() {
+        button.innerText = questionObject.answers[questionKeys[i]]
+        button.addEventListener("click", function () {
             const div = document.createElement('div');
             if (questionObject.correctAnswer === questionKeys[i]) {
                 // render correct div
@@ -74,7 +79,7 @@ function renderQuestion(questionObjectIndex) {
             }
             questionScreen.append(div);
 
-            renderQuestion(questionObjectIndex+1)
+            renderQuestion(questionObjectIndex + 1)
 
             setTimeout(() => {
                 div.style.display = "none"
@@ -88,35 +93,39 @@ function renderQuestion(questionObjectIndex) {
     answersArea.append(ul)
 }
 
-var secondsLeft = 60;
-var time = document.querySelector(".timer");
 
-function Time() {
-    var timer = setInterval(function(){
+
+function startTimer() {
+    console.log("CALLED TIMER");
+    var timer = setInterval(() => {
         secondsLeft--;
-        timer.textContent = secondsLeft + "seconds until GAME OVER.";
-    
+        timeLabel.textContent = secondsLeft + " seconds until GAME OVER.";
         if (secondsLeft === 0) {
             clearInterval(timer);
             sendMessage();
         }
-    })}
+    }, 1000);
+    document.getElementById('WRONG!').addEventListener('click', function() {
+        secondsLeft -= 10;
+    });
+}
+// document.getElementById('WRONG!').addEventListener('click', function() {
+//     secondsLeft -= 10;
+// });
 
-    function sendMessage() {
-        time.textContent = "GAME OVER";
-    }
-
-    Time();
+function sendMessage() {
+    time.textContent = "GAME OVER";
+}
 
 function startGame() {
-        // get current screen
-    const startScreen = document.getElementById("start-screen");
     // set the display to none
     startScreen.style.display = "none";
-    // get the next screen
-    const questionScreen = document.getElementById('question-screen');
     // set the display to block to show it
     questionScreen.style.display = "block";
 
-    renderQuestion(0)
+    renderQuestion(0);
+    startTimer();
 }
+
+startButton.addEventListener('click', startGame);
+
