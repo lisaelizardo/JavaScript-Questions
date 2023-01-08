@@ -76,6 +76,7 @@ function renderQuestion(questionObjectIndex) {
             } else {
                 // render wrong div
                 div.innerText = "Wrong!"
+                secondsLeft -= 10;
             }
             questionScreen.append(div);
 
@@ -103,19 +104,13 @@ function startTimer() {
         if (secondsLeft === 0) {
             clearInterval(timer);
             sendMessage();
+            endGame;
         }
     }, 1000);
-    document.getElementById('WRONG!').addEventListener('click', function() {
-        secondsLeft -= 10;
-    });
 }
 // document.getElementById('WRONG!').addEventListener('click', function() {
 //     secondsLeft -= 10;
 // });
-
-function sendMessage() {
-    time.textContent = "GAME OVER";
-}
 
 function startGame() {
     // set the display to none
@@ -123,8 +118,16 @@ function startGame() {
     // set the display to block to show it
     questionScreen.style.display = "block";
 
+
     renderQuestion(0);
     startTimer();
+}
+
+function endGame() {
+    endScreen.style.display = "block";
+    function sendMessage() {
+        time.textContent = "GAME OVER";
+    }
 }
 
 startButton.addEventListener('click', startGame);

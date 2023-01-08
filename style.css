@@ -1,5 +1,24 @@
 #start-screen {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    border: 2px solid;
+    color: white;
+    background-color: purple;
+}
+
+#answers {
+    border: 2px solid;
+    color: white;
+    background-color: purple;
+}
+
+body.div {
+    justify-content: center;
+    align-items: center;
 }
 
 #question-screen {
@@ -9,3 +28,9 @@
 #end-screen {
     display: none;
 }
+
+#timer {
+    position: fixed;
+    right: 0px; top: 0px;
+}
+
